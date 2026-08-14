@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Search, MapPin, ChevronRight, RefreshCw, SlidersHorizontal, X, ArrowRight, Sparkles, Filter, Bike } from 'lucide-react';
 import FilterSidebar from '../components/FilterSidebar';
 import BikeCard from '../components/BikeCard';
+import PromoBanner from '../components/PromoBanner';
 import { getVehicles } from '../services/api';
 
 export default function BikesPage({ onSelectVehicle }) {
@@ -349,48 +350,11 @@ export default function BikesPage({ onSelectVehicle }) {
             </div>
           </div>
 
-          {/* 3. Bottom Recommended / Popular Vehicles Section */}
-          {recommendedVehicles.length > 0 && (
-            <div style={{ marginTop: '4.5rem', paddingTop: '3rem', borderTop: '1px solid var(--border-color)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
-                <div>
-                  <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif', margin: 0 }}>
-                    Popular Rides
-                  </h2>
-                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.25rem', margin: 0 }}>
-                    Handpicked top-rated bikes ready for your next road trip.
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    padding: '0.55rem 1.1rem',
-                    borderRadius: '10px',
-                    border: '1px solid var(--border-color)',
-                    backgroundColor: 'var(--bg-card)',
-                    color: 'var(--text-primary)',
-                    fontWeight: 700,
-                    fontSize: '0.85rem',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <span>Explore Full Catalog</span>
-                  <ArrowRight size={15} color="#FFB800" />
-                </button>
-              </div>
-
-              <div className="grid-3" style={{ gap: '1.5rem' }}>
-                {recommendedVehicles.map(vehicle => (
-                  <BikeCard key={`rec-${vehicle.id}`} vehicle={vehicle} onViewDetails={onSelectVehicle} />
-                ))}
-              </div>
-            </div>
-          )}
+          {/* 3. Bottom Promotional Banner Section */}
+          <PromoBanner 
+            topVehicle={recommendedVehicles[0]} 
+            onBrowseCatalog={resetFilters} 
+          />
         </div>
       </section>
 
