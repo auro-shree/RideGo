@@ -1,10 +1,14 @@
 import React from 'react';
 import { Bike, Phone, Mail, MapPin, Globe, Share2, MessageSquare } from 'lucide-react';
+import GradientAccentLine from './GradientAccentLine';
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: '#0F141F', color: '#94A3B8', paddingTop: '3.5rem', paddingBottom: '2rem' }}>
-      <div className="container">
+    <footer style={{ backgroundColor: '#0F141F', color: '#94A3B8', paddingBottom: '2rem', position: 'relative' }}>
+      {/* Thin Premium Gradient Accent Line Directly Above Footer */}
+      <GradientAccentLine />
+
+      <div className="container" style={{ paddingTop: '3.5rem' }}>
         <div className="grid-4" style={{ marginBottom: '2.5rem' }}>
           {/* Brand Info */}
           <div>

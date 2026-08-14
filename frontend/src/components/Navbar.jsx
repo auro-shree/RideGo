@@ -5,6 +5,7 @@ import {
   Home, Calendar, Heart, CreditCard, HelpCircle, Tag, MapPin 
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import GradientAccentLine from './GradientAccentLine';
 
 export default function Navbar({ currentUser, onLogout, openAuthModal }) {
   const navigate = useNavigate();
@@ -232,6 +233,9 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
           </button>
         </div>
       </div>
+
+      {/* Thin Premium Gradient Accent Line Directly Below Navbar */}
+      <GradientAccentLine />
 
       {/* Mobile Drawer Overlay Backdrop */}
       {isDrawerOpen && (

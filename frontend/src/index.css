@@ -796,6 +796,30 @@ body.body-scroll-lock {
   transform: translateX(4px);
 }
 
+/* Premium Gradient Accent Line Animation */
+.gradient-accent-line {
+  animation: gradientAccentShift 10s linear infinite;
+}
+
+@keyframes gradientAccentShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-accent-line {
+    animation: none !important;
+  }
+}
+
+
 
 
 
