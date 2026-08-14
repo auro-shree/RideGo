@@ -76,49 +76,68 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
         </nav>
 
         {/* Desktop Actions / Theme Toggle / Profile */}
-        <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+        <div className="desktop-only nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <ThemeToggle />
 
-          <button style={{
-            background: 'var(--bg-primary)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            color: 'var(--text-secondary)'
-          }}>
+          {/* Circular Notification Button (44px x 44px) */}
+          <button 
+            type="button"
+            aria-label="Notifications"
+            title="Notifications"
+            style={{
+              position: 'relative',
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              border: '1px solid var(--border-color)',
+              backgroundColor: 'var(--bg-primary)',
+              color: 'var(--text-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+          >
             <Bell size={19} />
+            <span style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor: '#EF4444',
+              boxShadow: '0 0 6px #EF4444'
+            }} />
           </button>
 
           {currentUser ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               {currentUser.role === 'ROLE_ADMIN' ? (
                 <button 
                   onClick={() => navigate('/admin')}
-                  className="btn btn-dark btn-sm"
-                  style={{ gap: '0.4rem' }}
+                  className="btn btn-dark"
+                  style={{ height: '44px', padding: '0 1.25rem', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}
                 >
-                  <ShieldCheck size={16} color="#FFB800" />
+                  <ShieldCheck size={18} color="#FFB800" />
                   Admin Panel
                 </button>
               ) : (
                 <button 
                   onClick={() => navigate('/dashboard')}
-                  className="btn btn-outline btn-sm"
-                  style={{ gap: '0.4rem', padding: currentUser.profileImageUrl ? '0.2rem 0.6rem 0.2rem 0.2rem' : undefined }}
+                  className="btn btn-outline"
+                  style={{ height: '44px', padding: '0 1.1rem', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, borderColor: 'var(--border-color)', color: 'var(--text-primary)' }}
                 >
                   {currentUser.profileImageUrl ? (
                     <img 
                       src={currentUser.profileImageUrl} 
                       alt="Avatar" 
-                      style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }} 
+                      style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }} 
                     />
                   ) : (
-                    <User size={16} />
+                    <User size={18} />
                   )}
                   {currentUser.name || 'My Profile'}
                 </button>
@@ -126,24 +145,63 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
               
               <button 
                 onClick={onLogout}
-                className="btn btn-secondary btn-sm"
                 title="Logout"
-                style={{ padding: '0.4rem' }}
+                aria-label="Logout"
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'var(--bg-primary)',
+                  color: '#EF4444',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  flexShrink: 0
+                }}
               >
-                <LogOut size={16} />
+                <LogOut size={18} />
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <button 
                 onClick={() => openAuthModal('login')} 
-                className="btn btn-outline btn-sm"
+                style={{
+                  height: '44px',
+                  padding: '0 1.25rem',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'transparent',
+                  color: 'var(--text-primary)',
+                  fontWeight: 600,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
               >
-                Login
+                Log In
               </button>
+
               <button 
-                onClick={() => openAuthModal('signup')} 
-                className="btn btn-primary btn-sm"
+                onClick={() => openAuthModal('register')} 
+                style={{
+                  height: '44px',
+                  padding: '0 1.4rem',
+                  borderRadius: '10px',
+                  border: 'none',
+                  backgroundColor: '#FFB800',
+                  color: '#000000',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(255, 184, 0, 0.35)',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
               >
                 Sign Up
               </button>
@@ -151,21 +209,22 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
           )}
         </div>
 
-        {/* Mobile Controls (Hamburger Toggle) */}
-        <div className="mobile-only" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {/* Mobile Controls (Theme Toggle & Hamburger Menu) */}
+        <div className="mobile-only" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <ThemeToggle />
           <button 
             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
             style={{
-              background: '#F1F5F9',
-              border: 'none',
-              borderRadius: '8px',
+              background: 'var(--bg-primary)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '10px',
               width: '44px',
               height: '44px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: '#0F172A'
+              color: 'var(--text-primary)'
             }}
             aria-label="Toggle navigation menu"
           >
@@ -220,15 +279,12 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <ThemeToggle />
-            <button 
-              onClick={() => setIsDrawerOpen(false)}
-              style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.4rem' }}
-            >
-              <X size={22} />
-            </button>
-          </div>
+          <button 
+            onClick={() => setIsDrawerOpen(false)}
+            style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.4rem' }}
+          >
+            <X size={22} />
+          </button>
         </div>
 
         {/* User Card if logged in */}
@@ -238,10 +294,10 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
             alignItems: 'center',
             gap: '0.75rem',
             padding: '0.85rem',
-            backgroundColor: '#F8FAFC',
+            backgroundColor: 'var(--bg-primary)',
             borderRadius: '10px',
             marginBottom: '1.25rem',
-            border: '1px solid #E2E8F0'
+            border: '1px solid var(--border-color)'
           }}>
             <div style={{
               width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#FFB800', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: '#000', flexShrink: 0
@@ -253,10 +309,10 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
               )}
             </div>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentUser.name || 'User Account'}
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#64748B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {currentUser.email}
               </div>
             </div>
@@ -267,14 +323,14 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
         <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
           <button 
             onClick={() => handleNavClick('/')}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: '#0F172A', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
           >
             <Home size={18} color="#FFB800" /> Home
           </button>
           
           <button 
             onClick={() => handleNavClick('/bikes')}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: '#0F172A', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
           >
             <Bike size={18} color="#FFB800" /> Browse Bikes
           </button>
@@ -282,7 +338,7 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
           {currentUser && (
             <button 
               onClick={() => handleNavClick('/dashboard')}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: '#0F172A', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'transparent', color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left' }}
             >
               <Calendar size={18} color="#FFB800" /> My Bookings & Profile
             </button>
@@ -291,7 +347,7 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
           {currentUser?.role === 'ROLE_ADMIN' && (
             <button 
               onClick={() => handleNavClick('/admin')}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: '#0F172A', color: '#FFFFFF', fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left', marginTop: '0.5rem' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem', borderRadius: '8px', border: 'none', backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.95rem', cursor: 'pointer', textAlign: 'left', marginTop: '0.5rem' }}
             >
               <ShieldCheck size={18} color="#FFB800" /> Admin Control Panel
             </button>
@@ -299,7 +355,7 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
         </div>
 
         {/* Drawer Bottom Actions */}
-        <div style={{ paddingTop: '1rem', borderTop: '1px solid #E2E8F0', marginTop: 'auto' }}>
+        <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border-color)', marginTop: 'auto' }}>
           {currentUser ? (
             <button 
               onClick={() => { setIsDrawerOpen(false); onLogout(); }}
@@ -314,10 +370,10 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
                 onClick={() => { setIsDrawerOpen(false); openAuthModal('login'); }}
                 className="btn btn-outline btn-full"
               >
-                Login
+                Log In
               </button>
               <button 
-                onClick={() => { setIsDrawerOpen(false); openAuthModal('signup'); }}
+                onClick={() => { setIsDrawerOpen(false); openAuthModal('register'); }}
                 className="btn btn-primary btn-full"
               >
                 Sign Up

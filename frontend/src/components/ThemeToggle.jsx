@@ -17,30 +17,31 @@ export default function ThemeToggle({ className = '', style = {} }) {
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '0.4rem',
-        padding: '0.35rem 0.75rem',
+        gap: '0.45rem',
+        padding: '0.4rem 0.85rem',
         borderRadius: '30px',
         border: '1px solid var(--border-color)',
         backgroundColor: 'var(--bg-secondary)',
         color: 'var(--text-primary)',
         cursor: 'pointer',
         fontSize: '0.82rem',
-        fontWeight: 600,
-        transition: 'all 0.25s ease',
-        minHeight: '36px',
+        fontWeight: 700,
+        height: '40px',
+        minWidth: '92px',
+        transition: 'all 0.2s ease',
         boxShadow: 'var(--shadow-sm)',
         ...style
       }}
     >
       {isDark ? (
         <>
-          <Sun size={15} color="#FFB800" />
-          <span>Light</span>
+          <Moon size={15} color="#FFB800" fill="#FFB800" />
+          <span>Dark</span>
         </>
       ) : (
         <>
-          <Moon size={15} color="#6366F1" />
-          <span>Dark</span>
+          <Sun size={15} color="#F59E0B" fill="#F59E0B" />
+          <span>Light</span>
         </>
       )}
     </button>

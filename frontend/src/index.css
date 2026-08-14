@@ -713,4 +713,23 @@ body.body-scroll-lock {
   color: #0F172A;
 }
 
+/* Responsive Helper Utility Classes */
+@media (max-width: 991px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Navbar Actions Hover Micro-interactions */
+.nav-actions button:hover {
+  transform: translateY(-1px);
+}
+
+
 
