@@ -4,6 +4,7 @@ import {
   Bike, Bell, User, LogOut, ShieldCheck, Search, Menu, X, 
   Home, Calendar, Heart, CreditCard, HelpCircle, Tag, MapPin 
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar({ currentUser, onLogout, openAuthModal }) {
   const navigate = useNavigate();
@@ -27,11 +28,12 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
 
   return (
     <header style={{
-      backgroundColor: '#FFFFFF',
-      borderBottom: '1px solid #E2E8F0',
+      backgroundColor: 'var(--bg-secondary)',
+      borderBottom: '1px solid var(--border-color)',
       position: 'sticky',
       top: 0,
-      zIndex: 100
+      zIndex: 100,
+      transition: 'var(--transition)'
     }}>
       <div className="container" style={{
         display: 'flex',
@@ -55,10 +57,10 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
             <Bike size={26} color="#000000" strokeWidth={2.5} />
           </div>
           <div>
-            <div style={{ fontSize: '1.45rem', fontWeight: '800', color: '#0F172A', lineHeight: 1.1, fontFamily: 'Outfit, sans-serif' }}>
+            <div style={{ fontSize: '1.45rem', fontWeight: '800', color: 'var(--text-primary)', lineHeight: 1.1, fontFamily: 'Outfit, sans-serif' }}>
               Ride<span style={{ color: '#E5A400' }}>Go</span>
             </div>
-            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 600, letterSpacing: '0.04em' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.04em' }}>
               RIDE MORE, WORRY LESS
             </div>
           </div>
@@ -66,18 +68,20 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
 
         {/* Desktop Navigation Links */}
         <nav className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          <Link to="/" style={{ color: '#0F172A', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Home</Link>
-          <Link to="/bikes" style={{ color: '#475569', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Bikes</Link>
-          <Link to="/locations" style={{ color: '#475569', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Locations</Link>
-          <Link to="/offers" style={{ color: '#475569', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Offers</Link>
-          <Link to="/about" style={{ color: '#475569', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>About Us</Link>
+          <Link to="/" style={{ color: 'var(--text-primary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Home</Link>
+          <Link to="/bikes" style={{ color: 'var(--text-secondary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Bikes</Link>
+          <Link to="/locations" style={{ color: 'var(--text-secondary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Locations</Link>
+          <Link to="/offers" style={{ color: 'var(--text-secondary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>Offers</Link>
+          <Link to="/about" style={{ color: 'var(--text-secondary)', fontWeight: 600, textDecoration: 'none', fontSize: '0.95rem' }}>About Us</Link>
         </nav>
 
-        {/* Desktop Actions / Profile */}
-        <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Desktop Actions / Theme Toggle / Profile */}
+        <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <ThemeToggle />
+
           <button style={{
-            background: '#F1F5F9',
-            border: 'none',
+            background: 'var(--bg-primary)',
+            border: '1px solid var(--border-color)',
             borderRadius: '50%',
             width: '40px',
             height: '40px',
@@ -85,7 +89,7 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            color: '#475569'
+            color: 'var(--text-secondary)'
           }}>
             <Bell size={19} />
           </button>
@@ -194,7 +198,7 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
           bottom: 0,
           width: '82%',
           maxWidth: '320px',
-          backgroundColor: '#FFFFFF',
+          backgroundColor: 'var(--bg-secondary)',
           zIndex: 999,
           display: 'flex',
           flexDirection: 'column',
@@ -206,21 +210,25 @@ export default function Navbar({ currentUser, onLogout, openAuthModal }) {
         className="mobile-only"
       >
         {/* Drawer Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1.25rem', borderBottom: '1px solid #E2E8F0', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1.25rem', borderBottom: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{ backgroundColor: '#FFB800', width: '36px', height: '36px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Bike size={22} color="#000" strokeWidth={2.5} />
             </div>
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0F172A', fontFamily: 'Outfit, sans-serif' }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif' }}>
               Ride<span style={{ color: '#E5A400' }}>Go</span>
             </span>
           </div>
-          <button 
-            onClick={() => setIsDrawerOpen(false)}
-            style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', padding: '0.4rem' }}
-          >
-            <X size={22} />
-          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <ThemeToggle />
+            <button 
+              onClick={() => setIsDrawerOpen(false)}
+              style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '0.4rem' }}
+            >
+              <X size={22} />
+            </button>
+          </div>
         </div>
 
         {/* User Card if logged in */}

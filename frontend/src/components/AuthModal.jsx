@@ -47,7 +47,7 @@ export default function AuthModal({ initialMode = 'login', onClose, onLoginSucce
       <div className="modal-content" style={{ maxWidth: '440px', padding: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <div>
-            <h3 style={{ fontSize: '1.35rem', color: '#0F172A' }}>
+            <h3 style={{ fontSize: '1.35rem', color: 'var(--text-primary)' }}>
               {isLogin ? 'Welcome Back to RideGo' : 'Create Your RideGo Account'}
             </h3>
             <p style={{ fontSize: '0.85rem', color: '#64748B' }}>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Bike, ShieldCheck, Lock, Mail, AlertCircle, ArrowLeft } from 'lucide-react';
 import { loginUser } from '../services/api';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function AdminLoginPage({ onLoginSuccess }) {
   const navigate = useNavigate();
@@ -46,17 +47,23 @@ export default function AdminLoginPage({ onLoginSuccess }) {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#0F141F',
+      backgroundColor: 'var(--bg-primary)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem 1rem',
-      color: '#F8FAFC'
+      color: 'var(--text-primary)',
+      position: 'relative'
     }}>
+      <div style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', zIndex: 10 }}>
+        <ThemeToggle />
+      </div>
+
       <div style={{
         width: 'calc(100% - 2rem)',
         maxWidth: '440px',
-        backgroundColor: '#1E2434',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border-color)',
         borderRadius: '16px',
         border: '1px solid #2A3447',
         padding: '1.75rem',

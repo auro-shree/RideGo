@@ -4,11 +4,28 @@
   --primary: #FFB800;
   --primary-hover: #E5A400;
   --primary-light: rgba(255, 184, 0, 0.12);
+
+  /* Centralized Theme Variables (Default Light Theme) */
+  --bg-primary: #F7F8FA;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --text-primary: #111827;
+  --text-secondary: #64748B;
+  --border-color: #E2E8F0;
+  --input-bg: #FFFFFF;
+  --input-border: #CBD5E1;
+  --input-text: #0F172A;
+  --modal-bg: #FFFFFF;
+  --table-header-bg: #F8FAFC;
+  --table-stripe-bg: #F8FAFC;
+  --table-border: #E2E8F0;
+
   --dark-bg: #0C1017;
   --dark-surface: #141A26;
   --dark-card: #1C2434;
   --dark-border: #2A3447;
-  --light-bg: #F5F7FA;
+  --light-bg: #F7F8FA;
   --light-surface: #FFFFFF;
   --light-card: #FFFFFF;
   --light-border: #E2E8F0;
@@ -27,7 +44,28 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-full: 9999px;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+[data-theme="dark"] {
+  /* Centralized Dark Mode Tokens */
+  --bg-primary: #0F172A;
+  --bg-secondary: #111827;
+  --bg-card: #1E293B;
+  --bg-surface: #1E293B;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --border-color: #334155;
+  --input-bg: #1E293B;
+  --input-border: #334155;
+  --input-text: #F8FAFC;
+  --modal-bg: #1E293B;
+  --table-header-bg: #1E293B;
+  --table-stripe-bg: #182234;
+  --table-border: #334155;
+  --shadow-sm: 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 35px rgba(0,0,0,0.6);
 }
 
 * {
@@ -38,10 +76,11 @@
 
 body {
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--light-bg);
-  color: var(--text-light-primary);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   line-height: 1.5;
   overflow-x: hidden;
+  transition: var(--transition);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -241,8 +280,9 @@ body.body-scroll-lock {
 
 /* Glassmorphism Cards */
 .card {
-  background: var(--light-surface);
-  border: 1px solid var(--light-border);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
@@ -259,7 +299,7 @@ body.body-scroll-lock {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -269,13 +309,15 @@ body.body-scroll-lock {
 }
 
 .modal-content {
-  background: #FFFFFF;
+  background: var(--modal-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   max-width: 800px;
   width: calc(100% - 2rem);
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-lg);
   position: relative;
   animation: modalSlideUp 0.3s ease-out;
 }
@@ -338,7 +380,7 @@ body.body-scroll-lock {
 .form-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .form-control {
@@ -346,10 +388,11 @@ body.body-scroll-lock {
   min-height: 42px;
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-sm);
-  border: 1px solid #CBD5E1;
+  border: 1px solid var(--input-border);
   font-family: inherit;
   font-size: 0.95rem;
-  background-color: #FFFFFF;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   transition: var(--transition);
 }
 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTheme } from '../context/ThemeContext';
+import ThemeToggle from '../components/ThemeToggle';
 import { 
   LayoutDashboard, Bike, Calendar, Users, CreditCard, MapPin, 
   Wrench, Ticket, TrendingUp, Plus, CheckCircle, Clock, AlertTriangle, 
@@ -84,7 +86,7 @@ const INITIAL_INVOICES = [
 ];
 
 export default function AdminDashboardPage({ currentUser, onLogout, onExitAdmin }) {
-  const [theme, setTheme] = useState(() => localStorage.getItem('ridego_admin_theme') || 'light');
+  const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -153,11 +155,6 @@ export default function AdminDashboardPage({ currentUser, onLogout, onExitAdmin 
     imageUrl: PRESET_BIKE_IMAGES[0].url,
     status: 'AVAILABLE'
   });
-
-  const toggleTheme = (newTheme) => {
-    setTheme(newTheme);
-    localStorage.setItem('ridego_admin_theme', newTheme);
-  };
 
   const fetchStats = async () => {
     setIsLoadingStats(true);
@@ -679,7 +676,8 @@ export default function AdminDashboardPage({ currentUser, onLogout, onExitAdmin 
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <ThemeToggle />
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: styles.bg, border: `1px solid ${styles.border}`, padding: '0.4rem 0.85rem', borderRadius: '20px', fontSize: '0.78rem', fontWeight: 600, color: styles.textSecondary }}>
               <CalendarDays size={14} color="#FFB800" />
               <span>May 11 – May 17, 2025</span>
