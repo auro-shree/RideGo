@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RideGo - Admin Dashboard & Fleet Analytics</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin Glassmorphic Styles -->
+    <link rel="stylesheet" href="css/admin.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-body">
+
+    <!-- Admin Wrapper -->
+    <div class="d-flex" id="wrapper">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-wrapper" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-motorcycle text-accent"></i>
+                <span class="brand-text">RideGo <small class="role-badge">ADMIN</small></span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard" onclick="showSection('dashboard')">
+                            <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#vehicles" onclick="showSection('vehicles')">
+                            <i class="fa-solid fa-motorcycle"></i> <span>Vehicles</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#categories" onclick="showSection('categories')">
+                            <i class="fa-solid fa-layer-group"></i> <span>Categories</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#locations" onclick="showSection('locations')">
+                            <i class="fa-solid fa-location-dot"></i> <span>Locations</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#bookings" onclick="showSection('bookings')">
+                            <i class="fa-solid fa-calendar-check"></i> <span>Bookings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users" onclick="showSection('users')">
+                            <i class="fa-solid fa-users"></i> <span>Users</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#payments" onclick="showSection('payments')">
+                            <i class="fa-solid fa-credit-card"></i> <span>Payments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#maintenance" onclick="showSection('maintenance')">
+                            <i class="fa-solid fa-wrench"></i> <span>Maintenance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#coupons" onclick="showSection('coupons')">
+                            <i class="fa-solid fa-ticket"></i> <span>Coupons</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviews" onclick="showSection('reviews')">
+                            <i class="fa-solid fa-star"></i> <span>Reviews</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reports" onclick="showSection('reports')">
+                            <i class="fa-solid fa-file-invoice-dollar"></i> <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#settings" onclick="showSection('settings')">
+                            <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button class="btn btn-outline-light btn-sm w-100" onclick="logoutAdmin()">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Page Content -->
+        <main class="main-content flex-fill">
+            
+            <!-- Top Navbar -->
+            <header class="top-header d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-dark d-md-none" id="menu-toggle" onclick="toggleSidebar()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h2 class="h4 mb-0 text-light fw-bold" id="section-title">Admin Dashboard</h2>
+                </div>
+                
+                <div class="user-profile d-flex align-items-center gap-3">
+                    <div class="text-end d-none d-sm-block">
+                        <span class="d-block text-light fw-semibold" id="admin-name">Admin Console</span>
+                        <span class="d-block text-muted small" id="admin-email">admin@ridego.com</span>
+                    </div>
+                    <div class="avatar-circle">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Section 1: Dashboard View -->
+            <section id="dashboard-section" class="content-section">
+                
+                <!-- 8 Metric Cards Grid -->
+                <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-blue"><i class="fa-solid fa-motorcycle"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total Vehicles</span>
+                                <h3 class="stat-value" id="card-total-vehicles">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Available Vehicles</span>
+                                <h3 class="stat-value" id="card-available-vehicles">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-orange"><i class="fa-solid fa-clock"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Booked Vehicles</span>
+                                <h3 class="stat-value" id="card-booked-vehicles">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-purple"><i class="fa-solid fa-key"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Active Rentals</span>
+                                <h3 class="stat-value" id="card-active-rentals">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-red"><i class="fa-solid fa-wrench"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Maintenance</span>
+                                <h3 class="stat-value" id="card-maintenance-vehicles">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-cyan"><i class="fa-solid fa-users"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Total Users</span>
+                                <h3 class="stat-value" id="card-total-users">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card">
+                            <div class="stat-icon icon-yellow"><i class="fa-solid fa-calendar-day"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Today's Bookings</span>
+                                <h3 class="stat-value" id="card-todays-bookings">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card glass-card accent-card">
+                            <div class="stat-icon icon-emerald"><i class="fa-solid fa-sack-dollar"></i></div>
+                            <div class="stat-info">
+                                <span class="stat-label">Monthly Revenue</span>
+                                <h3 class="stat-value" id="card-monthly-revenue">$0.00</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Visualizations Grid -->
+                <div class="row g-4 mb-4">
+                    <!-- Chart 1: Revenue Trends -->
+                    <div class="col-12 col-lg-8">
+                        <div class="chart-card glass-card p-4">
+                            <div class="chart-header d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="chart-title text-light m-0"><i class="fa-solid fa-chart-line text-accent me-2"></i>Revenue by Month</h5>
+                                <span class="badge bg-dark-subtle text-accent">Last 6 Months</span>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="revenueChart" height="260"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chart 3: Category Distribution -->
+                    <div class="col-12 col-lg-4">
+                        <div class="chart-card glass-card p-4">
+                            <div class="chart-header mb-3">
+                                <h5 class="chart-title text-light m-0"><i class="fa-solid fa-pie-chart text-accent me-2"></i>Category Distribution</h5>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="categoryChart" height="260"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 2: Daily Booking Trends -->
+                    <div class="col-12 col-lg-6">
+                        <div class="chart-card glass-card p-4">
+                            <div class="chart-header mb-3">
+                                <h5 class="chart-title text-light m-0"><i class="fa-solid fa-chart-column text-accent me-2"></i>Booking Trends (Last 7 Days)</h5>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="bookingTrendChart" height="240"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 4: Top Booked Vehicles -->
+                    <div class="col-12 col-lg-6">
+                        <div class="chart-card glass-card p-4">
+                            <div class="chart-header mb-3">
+                                <h5 class="chart-title text-light m-0"><i class="fa-solid fa-trophy text-accent me-2"></i>Most Booked Vehicles</h5>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="topVehiclesChart" height="240"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chart 5: Booking Status Distribution -->
+                    <div class="col-12 col-lg-12">
+                        <div class="chart-card glass-card p-4">
+                            <div class="chart-header mb-3">
+                                <h5 class="chart-title text-light m-0"><i class="fa-solid fa-chart-donut text-accent me-2"></i>Booking Status Breakdown</h5>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="statusChart" height="180"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dynamic Section Placeholder -->
+            <section id="dynamic-section" class="content-section d-none">
+                <div class="glass-card p-5 text-center">
+                    <i class="fa-solid fa-folder-open text-accent fa-3x mb-3"></i>
+                    <h4 class="text-light" id="dynamic-title">Section View</h4>
+                    <p class="text-muted" id="dynamic-desc">This management module is connected and operational via REST APIs.</p>
+                    <button class="btn btn-accent mt-2" onclick="showSection('dashboard')">Back to Dashboard</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Bootstrap 5 & Custom Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

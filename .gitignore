@@ -1,0 +1,40 @@
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+frontend/*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven target & temp directories
+target/
+mvn-wrapper-tmp/
+
+# Node dependencies & build output
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+
+# IDE / Editor config
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# User uploads (keep directory structure)
+uploads/*
+!uploads/.gitkeep
