@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Grid, List, ChevronRight, RefreshCw, SlidersHorizontal, X } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Search, MapPin, ChevronRight, RefreshCw, SlidersHorizontal, X, ArrowRight, Sparkles, Filter, Bike } from 'lucide-react';
 import FilterSidebar from '../components/FilterSidebar';
 import BikeCard from '../components/BikeCard';
 import { getVehicles } from '../services/api';
 
 export default function BikesPage({ onSelectVehicle }) {
   const [vehicles, setVehicles] = useState([]);
+  const [allVehicles, setAllVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCity, setSelectedCity] = useState('All Locations');
+  
   const [filters, setFilters] = useState({
     maxPrice: 3000,
     categories: [],
@@ -19,31 +23,60 @@ export default function BikesPage({ onSelectVehicle }) {
 
   useEffect(() => {
     fetchVehicles();
-  }, [filters, sortBy]);
+  }, [filters, sortBy, searchQuery, selectedCity]);
 
   const fetchVehicles = async () => {
     setLoading(true);
     try {
-      let data = await getVehicles();
+      let rawData = await getVehicles();
+      setAllVehicles(rawData);
+      let data = [...rawData];
 
-      // Apply client-side filters
+      // Client-side Search Query Filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        data = data.filter(v => 
+          (v.brand && v.brand.toLowerCase().includes(query)) ||
+          (v.model && v.model.toLowerCase().includes(query)) ||
+          (v.categoryName && v.categoryName.toLowerCase().includes(query)) ||
+          (v.vehicleType && v.vehicleType.toLowerCase().includes(query))
+        );
+      }
+
+      // City Location Filter
+      if (selectedCity !== 'All Locations') {
+        data = data.filter(v => 
+          (v.locationName && v.locationName.toLowerCase().includes(selectedCity.toLowerCase())) ||
+          (v.city && v.city.toLowerCase().includes(selectedCity.toLowerCase()))
+        );
+      }
+
+      // Max Price Filter
       if (filters.maxPrice) {
         data = data.filter(v => (v.pricePerDay || 799) <= filters.maxPrice);
       }
+
+      // Categories Filter
       if (filters.categories && filters.categories.length > 0) {
         data = data.filter(v => filters.categories.includes(v.categoryName || v.vehicleType));
       }
+
+      // Fuel Types Filter
       if (filters.fuelTypes && filters.fuelTypes.length > 0) {
         data = data.filter(v => filters.fuelTypes.includes(v.fuelType));
       }
+
+      // Transmissions Filter
       if (filters.transmissions && filters.transmissions.length > 0) {
         data = data.filter(v => filters.transmissions.includes(v.transmission));
       }
+
+      // Min Rating Filter
       if (filters.minRating) {
         data = data.filter(v => (v.averageRating || 4.5) >= filters.minRating);
       }
 
-      // Sort
+      // Sorting
       if (sortBy === 'price-low') {
         data.sort((a, b) => (a.pricePerDay || 0) - (b.pricePerDay || 0));
       } else if (sortBy === 'price-high') {
@@ -62,40 +95,113 @@ export default function BikesPage({ onSelectVehicle }) {
 
   const resetFilters = () => {
     setFilters({ maxPrice: 3000, categories: [], fuelTypes: [], transmissions: [], minRating: 0 });
+    setSearchQuery('');
+    setSelectedCity('All Locations');
   };
 
-  return (
-    <div style={{ backgroundColor: '#F8FAFC', minHeight: '100vh', padding: '1.5rem 0 4rem' }}>
-      <div className="container">
-        {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: '#64748B', marginBottom: '1.25rem' }}>
-          <span>Home</span>
-          <ChevronRight size={14} />
-          <span style={{ color: '#0F172A', fontWeight: 600 }}>Explore Fleet</span>
-        </div>
+  // Recommended vehicles list (top 3 highest rated)
+  const recommendedVehicles = useMemo(() => {
+    if (!allVehicles.length) return [];
+    return [...allVehicles]
+      .sort((a, b) => (b.averageRating || 4.5) - (a.averageRating || 4.5))
+      .slice(0, 3);
+  }, [allVehicles]);
 
-        {/* Main Content Layout Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr)',
-          gap: '1.5rem'
-        }}>
-          {/* Desktop & Collapsible Mobile Filter Sidebar */}
+  return (
+    <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', color: 'var(--text-primary)', transition: 'var(--transition)' }}>
+      
+      {/* 1. Page Hero Banner Header */}
+      <section style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderBottom: '1px solid var(--border-color)',
+        padding: '2.5rem 0 2rem',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div className="container">
+          {/* Breadcrumb Navigation */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+            <span style={{ cursor: 'pointer' }}>Home</span>
+            <ChevronRight size={14} />
+            <span style={{ color: 'var(--text-primary)', fontWeight: 700 }}>Explore Fleet</span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.75rem' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', backgroundColor: 'rgba(255, 184, 0, 0.12)', color: '#FFB800', padding: '0.3rem 0.8rem', borderRadius: '30px', fontSize: '0.78rem', fontWeight: 800, letterSpacing: '0.04em', marginBottom: '0.65rem' }}>
+                <Sparkles size={14} /> PREMIUM BIKE RENTALS
+              </div>
+              <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0, fontFamily: 'Outfit, sans-serif' }}>
+                Find Your Perfect Ride
+              </h1>
+              <p style={{ fontSize: '0.98rem', color: 'var(--text-secondary)', marginTop: '0.4rem', margin: 0, maxWidth: '560px' }}>
+                Choose from our verified fleet of cruisers, sports bikes, and electric scooters with instant online booking.
+              </p>
+            </div>
+
+            {/* Quick Search & Location Inputs Bar */}
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', width: '100%', maxWidth: '520px' }}>
+              <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
+                <Search size={17} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                <input 
+                  type="text" 
+                  placeholder="Search bike model, brand..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.65rem 0.85rem 0.65rem 2.4rem',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: 'var(--bg-primary)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.9rem',
+                    outline: 'none'
+                  }}
+                />
+              </div>
+
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                style={{
+                  padding: '0.65rem 1rem',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="All Locations">📍 All Locations</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Bhubaneswar">Bhubaneswar</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Main Catalog Grid Section */}
+      <section style={{ padding: '2rem 0 4rem' }}>
+        <div className="container">
           <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.5rem'
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1fr)',
+            gap: '1.75rem'
           }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1.75rem',
               alignItems: 'start'
             }}>
-              {/* Filter Sidebar Component */}
-              <div style={{
-                display: showMobileFilters ? 'block' : undefined
-              }} className={!showMobileFilters ? 'desktop-only' : undefined}>
+              
+              {/* Desktop Filter Sidebar Column */}
+              <div className="desktop-only" style={{ width: '290px', flexShrink: 0 }}>
                 <FilterSidebar 
                   filters={filters} 
                   setFilters={setFilters} 
@@ -103,50 +209,69 @@ export default function BikesPage({ onSelectVehicle }) {
                 />
               </div>
 
-              {/* Fleet Catalog Column */}
-              <div style={{ minWidth: 0 }}>
-                {/* Header / Sort Bar */}
+              {/* Main Vehicle Listing Column */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                
+                {/* Results Header / Sort Control Bar */}
                 <div style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '12px',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '14px',
                   padding: '1rem 1.25rem',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  marginBottom: '1.25rem',
+                  marginBottom: '1.5rem',
                   flexWrap: 'wrap',
-                  gap: '0.75rem'
+                  gap: '1rem',
+                  boxShadow: 'var(--shadow-sm)'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    {/* Mobile Toggle Filter Button */}
+                    {/* Mobile Filters Trigger Button */}
                     <button 
-                      onClick={() => setShowMobileFilters(!showMobileFilters)}
-                      className="btn btn-outline btn-sm mobile-only"
-                      style={{ gap: '0.4rem' }}
+                      type="button"
+                      onClick={() => setShowMobileFilters(true)}
+                      className="mobile-only"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        padding: '0.5rem 0.9rem',
+                        borderRadius: '8px',
+                        border: '1px solid var(--border-color)',
+                        backgroundColor: 'var(--bg-primary)',
+                        color: 'var(--text-primary)',
+                        fontWeight: 700,
+                        fontSize: '0.85rem',
+                        cursor: 'pointer'
+                      }}
                     >
                       <SlidersHorizontal size={16} color="#FFB800" />
-                      {showMobileFilters ? 'Hide Filters' : 'Filters'}
+                      <span>Filters</span>
                     </button>
-                    <span style={{ fontWeight: 700, color: '#0F172A', fontSize: '0.95rem' }}>
-                      {vehicles.length} bikes available
+
+                    <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontSize: '1.05rem', fontFamily: 'Outfit, sans-serif' }}>
+                      {vehicles.length} {vehicles.length === 1 ? 'Bike Available' : 'Bikes Available'}
                     </span>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontSize: '0.85rem', color: '#64748B' }}>Sort By:</span>
+                  {/* Sort By Dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Sort By:</span>
                     <select 
                       value={sortBy} 
                       onChange={e => setSortBy(e.target.value)}
                       style={{
-                        padding: '0.4rem 0.8rem',
+                        padding: '0.45rem 0.85rem',
                         borderRadius: '8px',
-                        border: '1px solid #E2E8F0',
+                        border: '1px solid var(--border-color)',
                         fontSize: '0.85rem',
-                        fontWeight: 600,
-                        color: '#0F172A',
-                        backgroundColor: '#F8FAFC',
-                        minHeight: '38px'
+                        fontWeight: 700,
+                        color: 'var(--text-primary)',
+                        backgroundColor: 'var(--bg-primary)',
+                        minHeight: '38px',
+                        outline: 'none',
+                        cursor: 'pointer'
                       }}
                     >
                       <option value="price-low">Price: Low to High</option>
@@ -156,32 +281,65 @@ export default function BikesPage({ onSelectVehicle }) {
                   </div>
                 </div>
 
-                {/* Vehicle Cards Grid */}
+                {/* Vehicles Rendering Grid */}
                 {loading ? (
-                  <div style={{ padding: '4rem', textAlign: 'center', color: '#64748B' }}>
-                    <RefreshCw size={28} className="spin" style={{ margin: '0 auto 0.5rem' }} />
-                    <div>Loading fleet from PostgreSQL database...</div>
+                  <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                    <RefreshCw size={30} className="spin" style={{ margin: '0 auto 0.75rem', color: '#FFB800' }} />
+                    <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>Fetching live fleet from PostgreSQL database...</div>
                   </div>
                 ) : vehicles.length === 0 ? (
-                  <div style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid #E2E8F0',
-                    borderRadius: '12px',
-                    padding: '3rem 1.5rem',
-                    textAlign: 'center'
-                  }}>
-                    <Search size={40} color="#94A3B8" style={{ marginBottom: '1rem' }} />
-                    <h3 style={{ fontSize: '1.2rem', color: '#0F172A', marginBottom: '0.5rem' }}>No bikes match your selected filters</h3>
-                    <p style={{ color: '#64748B', fontSize: '0.88rem', marginBottom: '1.25rem' }}>Try clearing filters to see all available rental vehicles</p>
+                  /* Compact Polished Empty State */
+                  <div 
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border-color)',
+                      borderRadius: '16px',
+                      padding: '2.5rem 1.5rem',
+                      textAlign: 'center',
+                      boxShadow: 'var(--shadow-sm)',
+                      maxWidth: '540px',
+                      margin: '0 auto'
+                    }}
+                  >
+                    <div style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 184, 0, 0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 1.25rem'
+                    }}>
+                      <Search size={28} color="#FFB800" />
+                    </div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '0.4rem', fontFamily: 'Outfit, sans-serif' }}>
+                      No bikes found
+                    </h3>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                      No vehicles match your selected filter criteria. Try broadening your price range or category filters.
+                    </p>
                     <button 
+                      type="button"
                       onClick={resetFilters}
-                      className="btn btn-primary"
+                      style={{
+                        padding: '0.65rem 1.4rem',
+                        borderRadius: '10px',
+                        border: 'none',
+                        backgroundColor: '#FFB800',
+                        color: '#000000',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(255, 184, 0, 0.3)',
+                        transition: 'all 0.2s ease'
+                      }}
                     >
                       Reset All Filters
                     </button>
                   </div>
                 ) : (
-                  <div className="grid-3">
+                  <div className="grid-3" style={{ gap: '1.5rem' }}>
                     {vehicles.map(vehicle => (
                       <BikeCard key={vehicle.id} vehicle={vehicle} onViewDetails={onSelectVehicle} />
                     ))}
@@ -190,8 +348,105 @@ export default function BikesPage({ onSelectVehicle }) {
               </div>
             </div>
           </div>
+
+          {/* 3. Bottom Recommended / Popular Vehicles Section */}
+          {recommendedVehicles.length > 0 && (
+            <div style={{ marginTop: '4.5rem', paddingTop: '3rem', borderTop: '1px solid var(--border-color)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                  <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Outfit, sans-serif', margin: 0 }}>
+                    Popular Rides
+                  </h2>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginTop: '0.25rem', margin: 0 }}>
+                    Handpicked top-rated bikes ready for your next road trip.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.55rem 1.1rem',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: 'var(--bg-card)',
+                    color: 'var(--text-primary)',
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <span>Explore Full Catalog</span>
+                  <ArrowRight size={15} color="#FFB800" />
+                </button>
+              </div>
+
+              <div className="grid-3" style={{ gap: '1.5rem' }}>
+                {recommendedVehicles.map(vehicle => (
+                  <BikeCard key={`rec-${vehicle.id}`} vehicle={vehicle} onViewDetails={onSelectVehicle} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
+
+      {/* 4. Mobile Sliding Filter Drawer */}
+      {showMobileFilters && (
+        <>
+          <div 
+            onClick={() => setShowMobileFilters(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              backgroundColor: 'rgba(15, 23, 42, 0.65)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 998
+            }}
+            className="mobile-only"
+          />
+
+          <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            width: '85%',
+            maxWidth: '340px',
+            backgroundColor: 'var(--bg-secondary)',
+            zIndex: 999,
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '10px 0 30px rgba(0,0,0,0.25)',
+            overflowY: 'auto',
+            padding: '1.5rem 1.25rem'
+          }} className="mobile-only">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', paddingBottom: '0.85rem', borderBottom: '1px solid var(--border-color)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800, fontSize: '1.1rem' }}>
+                <SlidersHorizontal size={18} color="#FFB800" />
+                <span>Filters</span>
+              </div>
+              <button 
+                onClick={() => setShowMobileFilters(false)}
+                style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <FilterSidebar 
+              filters={filters} 
+              setFilters={setFilters} 
+              onReset={resetFilters} 
+              isMobile={true}
+              onCloseMobile={() => setShowMobileFilters(false)}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
