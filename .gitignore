@@ -1,9 +1,13 @@
 # Compiled Java class files
 *.class
 
-# Log files
+# Log files & environment secrets
 *.log
 frontend/*.log
+.env
+.env.*
+.env.local
+
 
 # Package Files
 *.jar

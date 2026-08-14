@@ -33,7 +33,7 @@ spring:
 # App Security JWT Settings
 app:
   jwt:
-    secret: RideGoSecretKeyForJWTTokenGenerationMinimum32BytesLongSecurityKey1234567890
+    secret: ${JWT_SECRET:RideGoSecretKeyForJWTTokenGenerationMinimum32BytesLongSecurityKey1234567890}
     expiration-ms: 86400000 # 24 hours in milliseconds
 
 # OpenAPI / Swagger Config
