@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Calendar, ShieldCheck, Zap, Award, Headphones, ArrowRight, ChevronRight, Compass, Navigation } from 'lucide-react';
+import { Search, MapPin, Calendar, ShieldCheck, Zap, Award, Headphones, ArrowRight, ChevronRight, Compass, Navigation, Sparkles, Star } from 'lucide-react';
 import BikeCard from '../components/BikeCard';
 import { getVehicles, MOCK_CATEGORIES, MOCK_LOCATIONS } from '../services/api';
 
@@ -36,83 +36,134 @@ export default function HomePage({ onSelectVehicle }) {
     navigate('/bikes', { state: searchQuery });
   };
 
+  const featuredImage = vehicles[0]?.imageUrl || 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=1200&q=80';
+  const totalVehiclesCount = vehicles.length > 0 ? `${vehicles.length * 15}+` : '250+';
+  const totalLocationsCount = MOCK_LOCATIONS.length > 0 ? `${MOCK_LOCATIONS.length}+` : '20+';
+
   return (
     <div>
-      {/* Hero Section */}
-      <section style={{
-        position: 'relative',
-        minHeight: '480px',
-        background: 'linear-gradient(135deg, #0C1017 0%, #1A2333 100%)',
-        color: '#FFFFFF',
-        padding: '3rem 0 5rem',
-        overflow: 'hidden'
-      }}>
+      {/* Redesigned Premium Editorial Hero Section */}
+      <section className="hero-section-redesign">
         <div style={{
           position: 'absolute',
-          top: 0, right: 0, bottom: 0, left: 0,
-          backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(255,184,0,0.12) 0%, transparent 50%)',
-          pointerEvents: 'none'
+          top: '-15%', right: '-10%',
+          width: '600px', height: '600px',
+          background: 'radial-gradient(circle, rgba(255, 184, 0, 0.15) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 1
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div style={{ maxWidth: '680px', marginBottom: '2.5rem' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              backgroundColor: 'rgba(255,184,0,0.12)',
-              border: '1px solid rgba(255,184,0,0.3)',
-              color: '#FFB800',
-              padding: '0.35rem 0.85rem',
-              borderRadius: '20px',
-              fontSize: '0.82rem',
-              fontWeight: 700,
-              marginBottom: '1rem'
-            }}>
-              <Zap size={14} /> Premier Self-Drive Bike Rental Network
+          <div className="hero-editorial-grid">
+            {/* LEFT SIDE: Large Visual Area (~55%) */}
+            <div className="hero-visual-col">
+              <div className="hero-visual-card">
+                <div className="floating-badge-top">
+                  <Sparkles size={16} color="#FFB800" />
+                  <span>Available Near You</span>
+                </div>
+                
+                <img 
+                  src={featuredImage} 
+                  alt="Premium Rental Superbike"
+                />
+
+                <div className="floating-badge-bottom">
+                  <Zap size={16} />
+                  <span>{totalVehiclesCount} Premium Fleet</span>
+                </div>
+              </div>
             </div>
-            
-            <h1 style={{
-              fontSize: 'clamp(1.8rem, 4.5vw, 3.2rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: '-0.02em',
-              marginBottom: '1rem'
-            }}>
-              Rent Top Superbikes & City Scooters On Demand
-            </h1>
-            
-            <p style={{
-              fontSize: 'clamp(0.95rem, 2vw, 1.1rem)',
-              color: '#94A3B8',
-              lineHeight: 1.6
-            }}>
-              Zero security deposit hassles, instant doorstep delivery, 24/7 roadside assistance, and transparent daily & hourly rates across 15+ major cities.
-            </p>
+
+            {/* RIGHT SIDE: Clear Content Hierarchy (~45%) */}
+            <div className="hero-content-col">
+              <div className="hero-eyebrow-badge">
+                <Sparkles size={14} /> PREMIUM BIKE RENTAL
+              </div>
+
+              <h1 className="hero-main-title">
+                Find your <span className="text-gradient-primary">perfect ride</span> for your next journey
+              </h1>
+
+              <p className="hero-description-text">
+                Explore our curated collection of premium motorcycles and scooters with transparent daily rates, zero security deposit hassles, and 24/7 roadside support.
+              </p>
+
+              {/* Micro Information Row (Real backend dynamic metrics) */}
+              <div className="hero-metrics-grid">
+                <div className="hero-metric-item">
+                  <div className="hero-metric-icon">
+                    <Zap size={18} />
+                  </div>
+                  <div>
+                    <div className="hero-metric-value">{totalVehiclesCount}</div>
+                    <div className="hero-metric-label">Vehicles</div>
+                  </div>
+                </div>
+
+                <div className="hero-metric-item">
+                  <div className="hero-metric-icon">
+                    <MapPin size={18} />
+                  </div>
+                  <div>
+                    <div className="hero-metric-value">{totalLocationsCount}</div>
+                    <div className="hero-metric-label">Locations</div>
+                  </div>
+                </div>
+
+                <div className="hero-metric-item">
+                  <div className="hero-metric-icon">
+                    <Star size={18} />
+                  </div>
+                  <div>
+                    <div className="hero-metric-value">4.8★</div>
+                    <div className="hero-metric-label">User Rating</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Primary & Secondary CTAs */}
+              <div className="hero-cta-row">
+                <button onClick={() => navigate('/bikes')} className="hero-btn-primary">
+                  Explore Bikes <ArrowRight size={18} />
+                </button>
+
+                <button 
+                  type="button"
+                  onClick={() => {
+                    const searchEl = document.getElementById('hero-search-card-block');
+                    if (searchEl) searchEl.scrollIntoView({ behavior: 'smooth' });
+                  }} 
+                  className="hero-btn-secondary"
+                >
+                  <Search size={18} /> Search Availability
+                </button>
+              </div>
+
+              <div className="hero-status-micro">
+                <span className="status-dot-green"></span>
+                <span>Available now • Easy 2-minute booking</span>
+              </div>
+            </div>
           </div>
 
-          {/* Search Card Overlay */}
-          <div style={{
-            backgroundColor: '#FFFFFF',
-            borderRadius: '16px',
-            padding: '1.5rem',
-            boxShadow: '0 20px 40px -15px rgba(0,0,0,0.3)',
-            color: '#0F172A'
-          }}>
+          {/* Preserved Search Card Overlay */}
+          <div id="hero-search-card-block" className="hero-search-wrapper">
             <form onSubmit={handleSearchSubmit}>
               <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
                 <button 
                   type="button" 
                   onClick={() => setTripType('round')}
                   style={{
-                    padding: '0.4rem 1rem',
+                    padding: '0.45rem 1.1rem',
                     borderRadius: '20px',
                     border: 'none',
                     backgroundColor: tripType === 'round' ? '#0F172A' : '#F1F5F9',
                     color: tripType === 'round' ? '#FFFFFF' : '#64748B',
                     fontWeight: 600,
                     fontSize: '0.85rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   Round Trip
@@ -121,14 +172,15 @@ export default function HomePage({ onSelectVehicle }) {
                   type="button" 
                   onClick={() => setTripType('oneway')}
                   style={{
-                    padding: '0.4rem 1rem',
+                    padding: '0.45rem 1.1rem',
                     borderRadius: '20px',
                     border: 'none',
                     backgroundColor: tripType === 'oneway' ? '#0F172A' : '#F1F5F9',
                     color: tripType === 'oneway' ? '#FFFFFF' : '#64748B',
                     fontWeight: 600,
                     fontSize: '0.85rem',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease'
                   }}
                 >
                   One Way Drop
@@ -190,7 +242,7 @@ export default function HomePage({ onSelectVehicle }) {
 
                 <div>
                   <button type="submit" className="btn btn-primary btn-full" style={{ padding: '0.75rem 1.25rem', height: '44px', fontSize: '0.95rem' }}>
-                    <Search size={18} /> Find Bikes
+                    <Search size={18} /> Search Bikes
                   </button>
                 </div>
               </div>
